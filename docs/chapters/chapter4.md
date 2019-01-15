@@ -1,4 +1,4 @@
-## Lesson 2 - Navigation
+## Navigation
 
 ### Intro
 
@@ -69,8 +69,6 @@ Open `app.routing.ts` and change the `redirectTo` of the default route to `'/col
 ``` XML
 { path: '', redirectTo: '/color', pathMatch: 'full' },
 ```
-
-If you are using `Playground` then you should head to: [https://play.nativescript.org/?template=nsday-color`](https://play.nativescript.org/?template=nsday-color)
 
 #### Step 2
 
@@ -204,7 +202,7 @@ Here is the configuration for each:
 <div class="exercise-end"></div>
 
 
-### Navigation with code
+### Programmatic Navigation
 Navigation can also be done with JavaScript.
 
 For that you will either need the standard `Router` from `@angular/router`, or `RouterExtensions` from `nativescript-angular/router`, which comes with additional functionality: to `clearHistory`, choose a page `transition` or navigate `back`.
@@ -316,13 +314,13 @@ However calling `backToPreviousPage` from `/articles/read/2`, would take us to `
 
 The default `back` button which appears in the iOS `<ActionBar>` performs `backToPreviousPage`, while the Android back button performs `back`.
 
-### Exercise: Navigation with code
+### Exercise: Programmatic Navigation
 
 <h4 class="exercise-start">
-  <b>Exercise</b>: Navigation with code
+  <b>Exercise</b>: Programmatic Navigation
 </h4>
 
-In this exercise we will play with the `blue` component. The `blue.component.html` already contains four buttons, each calling a different function.
+In this exercise we will update the `blue` component. The `blue.component.html` already contains four buttons, each calling a different function.
 
 Your task is to implement the empty functions in `blue.component.ts`, so that:
 
@@ -407,7 +405,7 @@ ngOnInit() {
   <b>Exercise</b>: Receiving parameters
 </h4>
 
-In this exercise we will play with the `rgb` component: `rgb.component.ts`. Currently every time you navigate to `rgb` the input parameters are getting ignored. Your task is to intercept the 'rgb' parameter and update `this.rgb`.
+In this exercise we will update the `rgb` component: `rgb.component.ts`. Currently every time you navigate to `rgb` the input parameters are getting ignored. Your task is to intercept the 'rgb' parameter and update `this.rgb`.
 
 <div class="solution-start"></div>
 
@@ -462,7 +460,7 @@ this.router.navigate(['/relative/path'], {
   <b>Exercise</b>: Page Transitions
 </h4>
 
-In this exercise we will play with the `color` and `red` components.
+In this exercise we will update the `color` and `red` components.
 
 #### Step 1
 

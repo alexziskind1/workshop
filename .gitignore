@@ -13,6 +13,11 @@ solution/platforms
 solution/hooks
 solution/app/**/*.js
 
+complete/node_modules
+complete/platforms
+complete/hooks
+complete/app/**/*.js
+
 playground/profile/node_modules
 playground/profile/platforms
 playground/profile/hooks

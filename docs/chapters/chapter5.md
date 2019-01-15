@@ -1,9 +1,9 @@
-## Lesson 3 - Components and Services
+## Services and Components
 
 ### Services
 <!-- https://angular.io/docs/ts/latest/tutorial/toh-pt4.html-->
 
-Services are JavaScript functions that are responsible for doing a specific task. Angular services are injected using a Dependency Injection mechanism and include the value, function or feature that is required by the application. There is nothing especially related to Services in NativeScript Angular--there is no ServiceBase class--but still services can be treated as fundamental to Angular applications.
+Services are JavaScript functions that are responsible for doing a specific task. Angular services are injected using a Dependency Injection mechanism and include the value, function, or feature that is required by the application. There is nothing especially related to Services in NativeScript Angular (there is no ServiceBase class) but still services can be treated as fundamental to Angular applications.
 
 #### Creating a service
 
@@ -118,7 +118,7 @@ imports: [
 ],
 ```
 
-From this point onwards the code that uses the `HttpClient` module is `exactly the same` as the code you would write for a `web application`.
+From this point onwards the code that uses the `HttpClient` module is **exactly the same** as the code you would write for a web application.
 
 This gives us a high level Angular `HttpClient` module that is capable of performing various request natively for `Android`, `iOS` and `Web`.
 
@@ -211,11 +211,9 @@ this.http.get('http://api.someopendata.org/cities',
 
 For this exercise we will use `ServiceTestComponent` located in `service-test` folder and `FootballService`, which you can find in `football.service.ts`.
 
-If you are using `Playground` then you should head to: [https://play.nativescript.org/?template=nsday-football`](https://play.nativescript.org/?template=nsday-football)
-
 `ServiceTestComponent` has several buttons, each designed to test a function of the `FootballService` that you will be constructing in this exercise. 
 
-The football service is based on [football-data.org API](http://api.football-data.org/documentation)
+The football service is based on [https://www.thesportsdb.com API](https://www.thesportsdb.com/api.php)
 
 ![Test Service](images/warmup-service-test.png?raw=true)
 
@@ -238,7 +236,7 @@ This should load an app with a bunch of buttons, but only the first button will 
   <b>Exercise</b>: Implementing the http calls
 </h4>
 
-For your convenience the `http` service is already injected into `FootballService` and the header with `apiKEY` is already configured.
+For your convenience the `http` service is already injected into `FootballService` and configured.
 
 #### Step 1 - Make it work
 
@@ -250,13 +248,12 @@ If you press the `Get PL Table` button or `Get PL Teams`, you should get the dat
 
 Your job is to implement the remaining functions:
 
- * `getTeam` - should make a call to: `https://api.football-data.org/v1/teams/{teamId}` with the `teamId` param,
- * `getPlayers` - should make a call to: `https://api.football-data.org/v1/teams/{teamId}/players` with the `teamId` param,
- * `getTeamFixtures` - should make a call to: `https://api.football-data.org/v1/teams/{teamId}/fixtures` with the `teamId` param,
- * `getFixtures` - should make a call to: `https://api.football-data.org/v1/competitions/{competitionId}/fixtures` with the `competitionId` param. Additionally this function should construct `URLSearchParams` for attributes passed in `options`.
+ * `getTeam` - should make a call to: `https://www.thesportsdb.com/api/v1/json/1/lookupteam.php?id=${teamId}` with the `teamId` param,
+ * `getPlayers` - should make a call to: `https://www.thesportsdb.com/api/v1/json/1/lookup_all_players.php?id=${teamId}` with the `teamId` param,
+ * `getTeamMatches` - should make a call to: `https://www.thesportsdb.com/api/v1/json/1/eventslast.php?id=${teamId}` with the `teamId` param,
+ * `getMatches` - should make a call to: `https://www.thesportsdb.com/api/v1/json/1/eventsseason.php?id=${leagueId}&s=${seasonId}` with the `leagueId` param and the optional `seasonId` param. The `seasonId` defaults to the previous season if not specified.
 
-To implement the first 3 functions, you can follow the `getTeams` function as the example. 
-To implement `getFixtures`, see `getLeagueTable`, which constructs `URLSearchParams`.
+To implement the first 3 functions, you can follow the `getTeams` function as the example.
 
 In each function you will need to follow these steps:
 
@@ -273,12 +270,12 @@ As you implement each of the functions, you can test them with the buttons in th
 
 ``` javascript
 public getTeam(teamId: number): Observable<Team> {
-  const url = `${this.baseUrl}/teams/${teamId}`;
+    const url = `${this.baseUrl}/lookupteam.php?id=${teamId}`;
 
-  return this.http.get<any>(url, { headers: this.header })
-  .pipe(
-    map(result => FootballFactory.teamFromRaw(result))
-  );
+    return this.http.get(url)
+      .pipe(
+        map(result => FootballFactory.teamFromRaw(result))
+      );
 }
 ```
 
@@ -286,48 +283,38 @@ public getTeam(teamId: number): Observable<Team> {
 
 ``` javascript
 public getPlayers(teamId: number): Observable<Player[]> {
-  const url = `${this.baseUrl}/teams/${teamId}/players`;
+    const url = `${this.baseUrl}/lookup_all_players.php?id=${teamId}`;
 
-  return this.http.get<any>(url, { headers: this.header })
-  .pipe(
-    map(result => FootballFactory.playersFromRaw(result))
-  );
+    return this.http.get(url)
+      .pipe(
+        map(result => FootballFactory.playersFromRaw(result))
+      );
 }
 ```
 
-#### getTeamFixtures
+#### getTeamMatches
 
 ``` javascript
-public getTeamFixtures(teamId: number): Observable<Fixture[]> {
-  const url = `${this.baseUrl}/teams/${teamId}/fixtures`;
-
-  return this.http.get<any>(url, { headers: this.header })
-  .pipe(
-    map(result => FootballFactory.fixturesFromRaw(result))
-  );
+public getTeamMatches(teamId: number): Observable<Match[]> {
+    const url = `${this.baseUrl}/eventslast.php?id=${teamId}`;
+    
+    return this.http.get(url)
+      .pipe(
+        map((result: any) => FootballFactory.matchesFromRaw(result.results))
+      );
 }
 ```
 
-#### getFixtures
+#### getMatches
 
 ``` javascript
-public getFixtures(competitionId: number, options: FixtureSearchOptions = {}): Observable<Fixture[]> {
-  const url = `${this.baseUrl}/competitions/${competitionId}/fixtures`;
-
-  let searchParams = new HttpParams();
-  if (options.matchday) {
-    searchParams = searchParams.set('matchday', options.matchday.toString());
-  } else if (options.timeFrame) {
-    searchParams = searchParams.set('timeFrame', options.timeFrame);
-  }
-
-  // alternative way
-  // let searchParams = this.buildSearchParams(options);
-
-  return this.http.get<any>(url, { headers: this.header, params: searchParams })
-  .pipe(
-    map(result => FootballFactory.fixturesFromRaw(result))
-  );
+public getMatches(leagueId: number, seasonId: number = DEFAULT_SEASON_ID): Observable<Match[]> {
+    const url = `${this.baseUrl}/eventsseason.php?id=${leagueId}&s=${seasonId}`;
+    
+    return this.http.get(url)
+      .pipe(
+        map((result: any) => FootballFactory.matchesFromRaw(result.events))
+      );
 }
 ```
 
@@ -449,126 +436,107 @@ Change the default route to:
 ```
 
 And run the application. You should get a view displaying a league table and a tab bar for navigation.
-When you press the `View Fixtures` button, you will get a list of fixtures.
+When you press the `View Matches` button, you will get a list of matches.
 
 ![League Table](images/warmup-league-table.png?raw=true)
-![Fixtures](images/warmup-fixtures.png?raw=true)
+![Matches](images/warmup-fixtures.png?raw=true)
 
-Your task is to encapsulate the fixture template into a `FixtureComponent` and use it in `CompetitionFixturesComponent` instead of the current fixture template.
+Your task is to encapsulate the match template into a `MatchComponent` and use it in `LeagueMatchesComponent` instead of the current match template.
 
 <h4 class="exercise-start">
-  <b>Exercise</b>: Create FixtureComponent with @Input
+  <b>Exercise</b>: Create MatchComponent with @Input
 </h4>
 
-#### Step 1 - Replace current fixture template in Competition Fixtures 
+#### Step 1 - Replace current match template in League Matches 
 
-The initial structure for `FixtureComponent` is already in place (see `fixture.component.ts`) and added to declarations in `app.module.ts`.
+The initial structure for `MatchComponent` is already in place (see `match.component.ts`) and added to declarations in `app.module.ts`.
 
-Open `competition-fixtures.component.html`, comment out the `GridLayout` and then add `<my-fixture [fixture]="fixture"></my-fixture>` in its place.
+Open `league-matches.component.html`, comment out the `GridLayout` and then add `<my-match [match]="match"></my-match>` in its place.
 
-You will notice that `my-fixture` expects a `[fixture]` attribute. This will be added in the next exercise.
+You will notice that `my-match` expects a `[match]` attribute. This will be added in the next exercise.
 
 <!-- > **HINT**: Make sure to keep the `GridLayout` commented out—you’ll need it momentarily. -->
 
 <div class="solution-start"></div>
 
-The template in `competition-fixtures.component.html` should look like this:
+The template in `league-matches.component.html` should look like this:
 
 ``` XML
-<ng-template let-fixture="item">
+<ng-template let-match="item">
   <StackLayout class="list-group-item">
-    <!-- Fixture Template -->
-    <my-fixture [fixture]="fixture"></my-fixture>
+    <!-- Match Template -->
+    <my-match [match]="match"></my-match>
   </StackLayout>
 </ng-template>
 ```
 
 <div class="solution-end"></div>
 
-Now if you reload the app and go to `View Fixtures` you should get something like this:
+Now if you reload the app and go to `View Matches` you should get something like this:
 
-![Fixtures](images/warmup-custom-fixtures.png?raw=true)
+![Matches](images/warmup-custom-fixtures.png?raw=true)
 
-#### Step 2 - Update FixtureComponent and add @Input for fixture
+#### Step 2 - Update MatchComponent and add @Input for match
 
-Head to `fixture.component.ts`.
+Head to `match.component.ts`.
 
-Currently the `FixtureComponent` has a `fixture` attribute, however in this state there is no way to update the value of the fixture from the `LeagueFixtures` Component.
+Currently the `MatchComponent` has a `match` attribute, however in this state there is no way to update the value of the match from the `LeagueMatches` Component.
 
-What we need is to turn the `fixture` into an `@Input` type attribute.
+What we need is to turn the `match` into an `@Input` type attribute.
 
 Refer to the solution below if you get stuck.
 
 <div class="solution-start"></div>
 
-`FixtureComponent` should look like this:
+`MatchComponent` should look like this:
 
 ``` javascript
-export class FixtureComponent {
-  @Input() fixture: Fixture;
+export class MatchComponent {
+  @Input() match: Match;
 
   public fakeDate: Date = new Date();
 
   public displayScore(): boolean {
-    // return this.fixture.status === 'FINISHED' || this.fixture.status === 'IN_PLAY'
+    // return this.match.status === 'FINISHED' || this.match.status === 'IN_PLAY'
     return false;
   }
 }
 ```
 <div class="solution-end"></div>
 
-#### Step 3 - Update displayScore
 
-You should also update `displayScore()` to use the commented out logic. Basically it is a helper function that is used to define whether we should display the `score` or the `date and time` of the game.
+#### Step 3 - Update HTML
 
-<div class="solution-start"></div>
+Head to `match.component.html`.
 
-``` javascript
-public displayScore(): boolean {
-  return this.fixture.status === 'FINISHED' || this.fixture.status === 'IN_PLAY'
-}
-```
-
-<div class="solution-end"></div>
-
-
-#### Step 4 - Update HTML
-
-Head to `fixture.component.html`.
-
-Update all the `Labels` so that they display the data from the fixture attribute. Make sure you take care of `homeTeamName`, `awayTeamName`, `result.goalsHomeTeam`, `result.goalsAwayTeam`, and `date`.
+Update all the `Labels` so that they display the data from the match attribute. Make sure you take care of `homeTeamName`, `awayTeamName`, `result.goalsHomeTeam`, `result.goalsAwayTeam`, and `date`.
 
 <div class="solution-start"></div>
 
 ``` XML
 <GridLayout rows="auto" columns="*, auto, *" class="list-group-item">  
-  <Label col="0" [text]="fixture.homeTeamName" class="h4 text-right"></Label>
+  <Label col="0" [text]="match.strHomeTeam" class="h4 text-right"></Label>
   
   <StackLayout col="1"  horizontalAlignment="center" class="m-x-10 h3">
-    <StackLayout *ngIf="displayScore()"  orientation="horizontal">
-      <Label [text]="fixture.result.goalsHomeTeam" class="score m-r-5"></Label>
-      <Label [text]="fixture.result.goalsAwayTeam" class="score"></Label>
-    </StackLayout>
-
-    <StackLayout *ngIf="!displayScore()" class="text-center text-muted h5">
-        <Label [text]="fixture.date | date:'H:m'"></Label>
-        <Label [text]="fixture.date | date:'dd-MMM'" textWrap="true"></Label>
+    <StackLayout  orientation="horizontal">
+      <Label [text]="match.intHomeScore" class="score m-r-5"></Label>
+      <Label [text]="match.intAwayScore" class="score"></Label>
     </StackLayout>
   </StackLayout>
 
-  <Label col="2" [text]="fixture.awayTeamName" class="h4 text-left"></Label>
+  <Label col="2" [text]="match.strAwayTeam" class="h4 text-left"></Label>
 </GridLayout>
 ```
 
 <div class="solution-end"></div>
 
-Reload the app. Now the fixtures should be displayed correctly again.
+Reload the app. Now the matches should be displayed correctly again.
 
 <!-- #### Step 3 (Bonus) - Convert inline styling conditions to functions
 
-The `<StackLayout>` and `<Label>` components in `fixture.component.html` have some logic embedded in `*ngIf` and `[class.in-play]` attributes.
+The `<StackLayout>` and `<Label>` components in `match.component.html` have some logic embedded in `*ngIf` and `[class.in-play]` attributes.
 
-Your task is to move this logic into two functions in `fixture.component.ts` and then call these functions:
+Your task is to move this logic into two functions in `match.component.ts` and then call these functions:
 
  * `*ngIf` => `displayScore()`
  * `[class.in-play]` => `inPlay()`
@@ -576,36 +544,36 @@ Your task is to move this logic into two functions in `fixture.component.ts` and
 
 <div class="solution-start"></div>
 
-The outer `StackLayout` in `fixture.component.html` should now look like this:
+The outer `StackLayout` in `match.component.html` should now look like this:
 
 ``` XML
 <StackLayout col="1"  horizontalAlignment="center" class="p-l-10 p-r-10 h3">
   <StackLayout *ngIf="displayScore()"  orientation="horizontal">
-    <Label [text]="fixture.result.goalsHomeTeam" class="score m-r-5" [class.in-play]="inPlay()"></Label>
-    <Label [text]="fixture.result.goalsAwayTeam" class="score" [class.in-play]="inPlay()"></Label>
+    <Label [text]="match.result.goalsHomeTeam" class="score m-r-5" [class.in-play]="inPlay()"></Label>
+    <Label [text]="match.result.goalsAwayTeam" class="score" [class.in-play]="inPlay()"></Label>
   </StackLayout>
 
   <StackLayout *ngIf="!displayScore()" class="text-center text-muted h5">
-    <Label [text]="fixture.date | date:'H:m'"></Label>
-    <Label [text]="fixture.date | date:'dd-MMM'" textWrap="true"></Label>
+    <Label [text]="match.date | date:'H:m'"></Label>
+    <Label [text]="match.date | date:'dd-MMM'" textWrap="true"></Label>
   </StackLayout>
 </StackLayout>
 ```
 
-And the following functions should now be defined in your `FixtureComponent`.
+And the following functions should now be defined in your `MatchComponent`.
 
 #### displayScore
 ``` javascript
 public displayScore(): boolean {
-  return this.fixture.status === 'FINISHED' 
-      || this.fixture.status === 'IN_PLAY';
+  return this.match.status === 'FINISHED' 
+      || this.match.status === 'IN_PLAY';
 }
 ```
 
 #### inPlay
 ``` javascript
 public inPlay(): boolean {
-  return this.fixture.status === 'IN_PLAY';
+  return this.match.status === 'IN_PLAY';
 }
 ```
 
@@ -626,15 +594,15 @@ To make it work we need first to create an `EventEmitter`:
 
 Note that this is made of 3 parts:
 
- * @Output - decorator
- * teamSelected - eventName
- * EventEmitter<number> - EventEmitter with the type of output
+ * `@Output` - decorator
+ * `teamSelected` - eventName
+ * `EventEmitter<number>` - `EventEmitter` with the type of output
 
 Then every time we want to trigger the event, we can call `emit(value)` on `this.teamSelected`. Just like this:
 
 ``` javascript
 onTeamSelect(event) {
-  const selectedTeamId = this.table.standing[event.index].teamId;
+  const selectedTeamId = this.table.standing[event.index].teamid;
   console.log('::LeagueTableComponent::onTeamSelect::' + selectedTeamId);
   this.teamSelected.emit(selectedTeamId);
 }
@@ -649,7 +617,7 @@ Obviously there must be something that actually triggers `onTeamSelect`. In this
 All this means that everywhere we use `<my-league-table>` we can now add a handler for `teamSelected` like this (see `tables.component.html`):
 
 ``` XML
-<my-league-table [competitionId]="PremierLeagueId" (teamSelected)="onTeamTap($event)"></my-league-table>
+<my-league-table [leagueId]="PremierLeagueId" (teamSelected)="onTeamTap($event)"></my-league-table>
 ```
 
 Note that `$event` will contain the value passed into `emit`, in this case this will be a `teamId`.
@@ -684,7 +652,7 @@ Update the `onTeamSelected` function, so that it `emits` the `teamSelected` even
 
 ``` javascript
 onTeamSelected(event) {
-  const selectedTeamId = this.table.standing[event.index].teamId;
+  const selectedTeamId = this.table.standing[event.index].teamid;
   console.log('::LeagueTableComponent::onTeamSelect::' + selectedTeamId);
 
   this.teamSelected.emit(selectedTeamId);
@@ -728,7 +696,7 @@ We just need to update each of the `<my-league-table>` tag to bind to the `(team
 
 <div class="solution-start"></div>
 ``` XML
-<my-league-table [competitionId]="PremierLeagueId" (teamSelected)="onTeamTap($event)"></my-league-table>
+<my-league-table [leagueId]="PremierLeagueId" (teamSelected)="onTeamTap($event)"></my-league-table>
 ```
 <div class="solution-end"></div>
 
@@ -736,7 +704,7 @@ We just need to update each of the `<my-league-table>` tag to bind to the `(team
 
 Test the app to see if this works.
 
-Now upon tapping on a team in the table you should be redirected to a team view, which should display fixtures for that given team.
+Now upon tapping on a team in the table you should be redirected to a team view, which should display matches for that given team.
 
 <div class="exercise-end"></div>
 
@@ -783,6 +751,6 @@ Now you can use the `ColorPickerComponent` like this:
 ### Bonus Component Exercise
 
 Can you implement the missing pieces of the `PlayerComponent`? 
-Your task is to add an `@Input` to capture the player object, then update `TeamComponent`, so that it displayes a list of players instead of fixtures.
+Your task is to add an `@Input` to capture the player object, then update `TeamComponent`, so that it displayes a list of players instead of matches.
 
 Each `PlayerComponent` should display player details like: name, position, jerseyNumber and nationality. 

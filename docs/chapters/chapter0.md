@@ -1,4 +1,4 @@
-## Introduction - hi
+## Introduction
 
 Welcome! Below you’ll find all slides and instructions for the hands-on activities being held throughout the day. The site will remain up well after the event so you can refer back to the material at any time.
 

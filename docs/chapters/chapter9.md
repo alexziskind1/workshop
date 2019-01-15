@@ -21,7 +21,7 @@ Here are the specific things you need to do.
     * Location: Free-form text
 * **2**: Pass that data to your list screen, and only show pets that match the user-selected filters.
 
-If you have extra time, there are a lot more filters you might want to implement. Check out the list of values in [`search-options.ts`](NativeScriptFhttps://github.com/NativeScript/workshop/blob/master/demo/app/models/search-options.tsormsModule) for a full list of values you can pass to the Petfinder API.
+If you have extra time, there are a lot more filters you might want to implement. Check out the list of values in [`search-options.ts`](https://github.com/NativeScript/workshop/blob/master/demo/app/models/search-options.tsormsModule) for a full list of values you can pass to the Petfinder API.
 
 ### Tips
 

@@ -1,8 +1,6 @@
 ## What is NativeScript?
 
-Below please find slides describing NativeScript:
-
-* [Download the _Introduction to NativeScript_ slides](https://github.com/NativeScript/workshop/blob/master/Introduction.pptx)
+An overview of NativeScript (Slides)
 
 ### The NativeScript CLI
 

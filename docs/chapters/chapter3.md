@@ -1,12 +1,10 @@
-## Lesson 1 - UI
+## User Interface
 
 In this lesson we are going to familiarize ourselves with some of the most commonly used UI components in NativeScript.
 
 For this exercise we will use the contents of the `app/profile` folder, which already contains some pieces of the app that we need.
 
-If you are using `Playground` then you should head to: [https://play.nativescript.org/?template=nsday-profile`](https://play.nativescript.org/?template=nsday-profile)
-
-If you open `profile.component.ts` you will notice that our component has an attribute `profile` with some populated values. In the next few steps we will create a screen that will allow us to display and edit these values.
+If you open `profile.component.ts` you will notice that our component has an property `profile` with some populated values. In the next few steps we will create a screen that will allow us to display and edit these values.
 
 Here are some examples of UI components:
 
@@ -49,14 +47,14 @@ For example:
   <b>Exercise</b>: Use Label, TextField, Switch, DatePicker, Slider, Button
 </h4>
 
-Recreate the below UI and bind the input components to the profile attributes.
+Recreate the below UI (in the first tab) and bind the input components to the profile attributes.
 Additionally, make sure that the two buttons call `save()` and `clear()` respectively.
 
 <b>HINT</b> To make a TextField password friendly use `secure="true"`.
 
 ![Recreate UI](images/warmup-01.png?raw=true)
 
-Edit `profile.component.html` and have fun.
+Edit `profile.component.html` and use the space in the first tab inside the `<StackLayout>` element.
 
 > **NOTE**: Your goal at this point is just to get the _initial_ values of the `profile` property to show up. If you change the values of the form fields and you don’t see those changes when you hit Save don’t worry; we’ll tackle that in the next section.
 
@@ -220,9 +218,9 @@ Test it by clicking the Clear and Save buttons and see what happens.
 
 ### Theme
 
-Now that we have the profile page doing something `sort of` useful, let's make it look a little bit better.
+Now that we have the profile page doing something sort-of useful, let's make it look a little bit better.
 
-The good news is that NativeScript comes with many built in themes.
+The good news is that NativeScript app templates come with many built in themes.
 
 ![Color Schemes](http://docs.nativescript.org/img/theme/color-schemes-all.png)
 
@@ -355,7 +353,8 @@ Update the UI to make it look more like the one in the picture below.
       <Slider
         [(ngModel)]="profile.codingPower"
         [minValue]="0"
-        [maxValue]="10">
+        [maxValue]="10"
+        class="slider">
       </Slider>
 
       <Button text="Save" (tap)="save()" class="btn btn-primary"></Button>
@@ -397,9 +396,9 @@ Open `app.css` and change the imported style to each of the values below to see 
 
 
 
-#### (Bonus) - Use the NativeScript Themebuilder tool to create your own theme
+#### (Bonus) - Use the NativeScript Theme Builder tool to create your own theme
 
-Build your own theme using the [NativeScript theme builder](http://www.nativescriptthemebuilder.com/#). This cool tool lets you view changes in a web browser, download a file, and style your app with a custom CSS file. Try building a patriotic theme with your flag's colors, then download it to the root folder of your app. To see your theme, edit `app.css` to use the core theme and your new custom theme, like this: 
+Build your own theme using the [NativeScript Theme Builder](http://www.nativescriptthemebuilder.com/#). This tool lets you view changes in a web browser, download a file, and style your app with a custom CSS file. Try building a patriotic theme with your flag's colors, then download it to the root folder of your app. To see your theme, edit `app.css` to use the core theme and your new custom theme, like this: 
 
 ```
 @import 'nativescript-theme-core/css/core.light.css';
@@ -516,18 +515,17 @@ Instead of zooming, make the label spin around, just for practice. Hint, both `p
 
 <div class="exercise-end"></div>
 
-### NativeScript UI
+### NativeScript UI Library
 
 NativeScript comes with an additional `FREE` UI library called [NativeScript UI](https://www.nativescript.org/ui-for-nativescript) it comes with a set of great components like: ListView, SideDrawer, Calendar, DataForm, Gauges and AutoComplete.
 
 You can find the Angular Docs for these components [here](http://docs.telerik.com/devtools/nativescript-ui/Controls/Angular/overview)
 
-#### Using NativeScript UI to a project
+#### Adding NativeScript UI to a project
 
 For today we will focus on one of the components [DataForm](http://docs.telerik.com/devtools/nativescript-ui/Controls/Angular/DataForm/dataform-overview).
 
-You `nativescript-ui-dataform` should already be installed in the project.
-So, there is no need to run a separate npm install.
+The `nativescript-ui-dataform` package should already be installed in the project, so there is no need to run a separate npm install.
 
 It allows you to construct nice looking entry forms with all the styling and eye pleasing UX purely through configuration.
 
@@ -649,10 +647,10 @@ Here is the full implementation of the feedback form:
 
 This is just scratching the surface of what `RadDataForm` can do. We can also add input validation, add field grouping add images and more.
 
-### Exercise: NativeScript UI
+### Exercise: NativeScript UI DataForm
 
 <h4 class="exercise-start">
-  <b>Exercise</b>: NativeScript UI
+  <b>Exercise</b>: NativeScript UI DataForm
 </h4>
 
 Change `selectedIndex="1"` on the `TabView` component, so that each time the app refreshes we will start on the second tab.

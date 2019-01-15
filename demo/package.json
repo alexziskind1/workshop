@@ -2,7 +2,7 @@
   "description": "NativeScript Application",
   "license": "SEE LICENSE IN <your-license-filename>",
   "readme": "NativeScript Application",
-  "repository": "https://github.com/nativescript/workshop",
+  "repository": "https://github.com/alexziskind1/workshop",
   "nativescript": {
     "id": "org.nativescript.nativescriptworkshop",
     "tns-ios": {

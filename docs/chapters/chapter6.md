@@ -1,6 +1,6 @@
-## Lesson 4 - Plugins
+## Plugins
 
-In this Lesson you are going to learn how to use a few out of a generous collection of NativeScript plugins.
+In this Lesson you are going to learn how to use a few simple NativeScript plugins.
 
 Most of the plugins you can install either by calling `npm install` or for those that contain some native iOS and/or Android elements `tns plugin add`.
 
